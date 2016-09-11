@@ -1,0 +1,41 @@
+/*
+   Bluetooth module is connected to serial1 port of the mega.
+   If you are using any other board then use software serial library.
+
+   Written By-
+   Swapnil Verma
+   09 Aug 2016
+*/
+int count = 0;
+
+void setup() {
+  Serial.begin(9600);
+  Serial1.begin(9600);
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
+}
+
+void loop() {  
+  Serial1.println("1"); // Send handsake signal to android
+  delay(1000); // Wait for a sec
+  if (Serial1.available() > 0) {
+    char ch = Serial1.read();
+    Serial.println(ch);
+  
+    if (ch == '0') {
+      digitalWrite(13, HIGH);
+      Serial.println("Turning LED on");
+    }
+    count = 0;
+  } else {
+    ++count;
+
+    if (count > 5) {
+      digitalWrite(13, LOW);
+      Serial.println("Turning LED off");
+      count = 0;
+    }
+  }
+
+  delay(60000); // Wait for a minute
+}
